@@ -1,0 +1,288 @@
+{
+    "tables": {
+        "awards": {
+            "tableName": "awards",
+            "schema": {
+                "idawards": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "field": "idawards",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "award_name": {
+                    "allowNull": false,
+                    "field": "award_name",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "award_description": {
+                    "allowNull": false,
+                    "field": "award_description",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "award_details": {
+                    "allowNull": true,
+                    "field": "award_details",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "disciplinary": {
+            "tableName": "disciplinary",
+            "schema": {
+                "iddisciplinary": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "field": "iddisciplinary",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "idemp": {
+                    "allowNull": false,
+                    "model": "emp",
+                    "foreignKey": "idemp",
+                    "field": "idemp",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "write_up_description": {
+                    "allowNull": false,
+                    "field": "write_up_description",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "write_up_details": {
+                    "allowNull": true,
+                    "field": "write_up_details",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "emp": {
+            "tableName": "emp",
+            "schema": {
+                "idemp": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "field": "idemp",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "hireDate": {
+                    "allowNull": false,
+                    "field": "hireDate",
+                    "seqType": "Sequelize.DATEONLY"
+                },
+                "dob": {
+                    "allowNull": false,
+                    "field": "dob",
+                    "seqType": "Sequelize.DATEONLY"
+                },
+                "firstName": {
+                    "allowNull": false,
+                    "field": "firstName",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "middleName": {
+                    "allowNull": true,
+                    "field": "middleName",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "lastName": {
+                    "allowNull": false,
+                    "field": "lastName",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "userId": {
+                    "allowNull": false,
+                    "field": "userId",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "password": {
+                    "allowNull": false,
+                    "field": "password",
+                    "seqType": "Sequelize.STRING(45)"
+                },
+                "active": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": "1"
+                    },
+                    "field": "active",
+                    "seqType": "Sequelize.INTEGER(4)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "schedules": {
+            "tableName": "schedules",
+            "schema": {
+                "idschedules": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "field": "idschedules",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "idemp": {
+                    "allowNull": false,
+                    "model": "emp",
+                    "foreignKey": "idemp",
+                    "field": "idemp",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "week_start": {
+                    "allowNull": false,
+                    "field": "week_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "mon_start": {
+                    "allowNull": true,
+                    "field": "mon_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "mon_end": {
+                    "allowNull": true,
+                    "field": "mon_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "tue_start": {
+                    "allowNull": true,
+                    "field": "tue_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "tue_end": {
+                    "allowNull": true,
+                    "field": "tue_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "wen_start": {
+                    "allowNull": true,
+                    "field": "wen_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "wen_end": {
+                    "allowNull": true,
+                    "field": "wen_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "thu_start": {
+                    "allowNull": true,
+                    "field": "thu_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "thu_end": {
+                    "allowNull": true,
+                    "field": "thu_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "fri_start": {
+                    "allowNull": true,
+                    "field": "fri_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "fri_end": {
+                    "allowNull": true,
+                    "field": "fri_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "sat_start": {
+                    "allowNull": true,
+                    "field": "sat_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "sat_end": {
+                    "allowNull": true,
+                    "field": "sat_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "sun_start": {
+                    "allowNull": true,
+                    "field": "sun_start",
+                    "seqType": "Sequelize.DATE"
+                },
+                "sun_end": {
+                    "allowNull": true,
+                    "field": "sun_end",
+                    "seqType": "Sequelize.DATE"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "time_punches": {
+            "tableName": "time_punches",
+            "schema": {
+                "idtime_punch": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "field": "idtime_punch",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "idemp": {
+                    "model": "emp",
+                    "foreignKey": "idemp",
+                    "field": "idemp",
+                    "seqType": "Sequelize.INTEGER(11)"
+                },
+                "clock_in": {
+                    "allowNull": true,
+                    "field": "clock_in",
+                    "seqType": "Sequelize.DATE"
+                },
+                "clock_out": {
+                    "allowNull": true,
+                    "field": "clock_out",
+                    "seqType": "Sequelize.DATE"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        }
+    },
+    "revision": 1
+}

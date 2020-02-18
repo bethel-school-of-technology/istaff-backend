@@ -1,0 +1,28 @@
+{{!-- Subject to change <nav>
+    <a href="/users/profile">HOME</a> 
+    <a href="/users/logout">LOGOUT</a>
+    <a href="/users/admin">ADMIN</a>
+</nav>
+
+<h1>Admin Profile</h1>
+<h1>Hello {{FirstName}} {{LastName}}</h1>
+<h2>Email: {{Email}}</h2>
+<h3>Username: {{Username}}</h3><br><br><br>
+
+<div>
+    <ul>
+        {{#each list}}
+        <li>Name: {{FirstName}} {{LastName}}</li>
+        <li>
+            <form method="GET" action="/users/admin/editUser/{{UserId}}" id="profile" name="profile">
+                <button type="profile">Profile</button>
+            </form>
+            <form method="POST" action="/users/{{UserId}}" id="delete" name="delete">
+                <button type="delete"
+                    onclick="return confirm('Are you sure you want to delete the user?')">Delete</button>
+            </form>
+        </li>
+        <br>
+        {{/each}}
+    </ul>
+</div> --}}

@@ -35,6 +35,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: false
     },
+    active: {
+      type: DataTypes.INTEGER(4),
+      allowNull: false,
+      defaultValue: '1'
+  },
     deleted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
