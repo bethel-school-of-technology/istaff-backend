@@ -15,8 +15,8 @@ var Sequelize = require('sequelize');
 
 var info = {
     "revision": 1,
-    "name": "initialbetterthenjoshes_test_migration",
-    "created": "2020-02-18T04:25:07.725Z",
+    "name": "initial",
+    "created": "2020-02-19T05:45:40.169Z",
     "comment": ""
 };
 
@@ -72,7 +72,7 @@ var migrationCommands = [{
                     "allowNull": false
                 },
                 "idemp": {
-                    "type": Sequelize.INTEGER(11),
+                    "type": Sequelize.INTEGER,
                     "field": "idemp",
                     "foreignKey": "idemp",
                     "model": "emp",
@@ -108,8 +108,9 @@ var migrationCommands = [{
             "emp",
             {
                 "idemp": {
-                    "type": Sequelize.INTEGER(11),
+                    "type": Sequelize.INTEGER,
                     "field": "idemp",
+                    "autoIncrement": true,
                     "primaryKey": true,
                     "allowNull": false
                 },
@@ -141,10 +142,11 @@ var migrationCommands = [{
                 "userId": {
                     "type": Sequelize.STRING(45),
                     "field": "userId",
+                    "unique": true,
                     "allowNull": false
                 },
                 "password": {
-                    "type": Sequelize.STRING(45),
+                    "type": Sequelize.STRING,
                     "field": "password",
                     "allowNull": false
                 },
@@ -152,6 +154,24 @@ var migrationCommands = [{
                     "type": Sequelize.INTEGER(4),
                     "field": "active",
                     "defaultValue": "1",
+                    "allowNull": false
+                },
+                "deleted": {
+                    "type": Sequelize.BOOLEAN,
+                    "field": "deleted",
+                    "defaultValue": false,
+                    "allowNull": false
+                },
+                "admin": {
+                    "type": Sequelize.BOOLEAN,
+                    "field": "admin",
+                    "defaultValue": false,
+                    "allowNull": false
+                },
+                "punch": {
+                    "type": Sequelize.BOOLEAN,
+                    "field": "punch",
+                    "defaultValue": false,
                     "allowNull": false
                 },
                 "createdAt": {
@@ -180,7 +200,7 @@ var migrationCommands = [{
                     "allowNull": false
                 },
                 "idemp": {
-                    "type": Sequelize.INTEGER(11),
+                    "type": Sequelize.INTEGER,
                     "field": "idemp",
                     "foreignKey": "idemp",
                     "model": "emp",
@@ -287,7 +307,7 @@ var migrationCommands = [{
                     "allowNull": false
                 },
                 "idemp": {
-                    "type": Sequelize.INTEGER(11),
+                    "type": Sequelize.INTEGER,
                     "field": "idemp",
                     "foreignKey": "idemp",
                     "model": "emp"

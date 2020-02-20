@@ -8,7 +8,7 @@ var authService = {
             UserName: user.UserName,
             UserId: user.UserId,
             Admin: user.Admin
-        }, 'TheSkyIsFalling!!',
+        }, 'thesaltpassword',
         {
             expiresIn: '1h'
         });
@@ -16,7 +16,7 @@ var authService = {
     },
     verifyUser: function(token){
         try {
-            let decoded = jwt.verify(token, 'TheSkyIsFalling!!');
+            let decoded = jwt.verify(token, 'thesaltpassword');
             return models.users.findByPk(decoded.UserId);
         } catch (err) {
             console.log(err);
@@ -24,7 +24,7 @@ var authService = {
         }
     },
     hashPassword: function(plainTextPassword){
-        let salt = bcrypt.genSaltSync(10);
+        let salt = bcrypt.genSaltSync(2);
         let hash = bcrypt.hashSync(plainTextPassword, salt);
         return hash;
     },

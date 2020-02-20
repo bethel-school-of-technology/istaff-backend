@@ -3,9 +3,10 @@
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('emp', {
     idemp: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     hireDate: {
       type: DataTypes.DATEONLY,
@@ -29,10 +30,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     userId: {
       type: DataTypes.STRING(45),
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     password: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING,
       allowNull: false
     },
     active: {

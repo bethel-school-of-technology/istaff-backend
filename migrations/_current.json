@@ -51,7 +51,7 @@
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
-                    "seqType": "Sequelize.INTEGER(11)"
+                    "seqType": "Sequelize.INTEGER"
                 },
                 "write_up_description": {
                     "allowNull": false,
@@ -82,8 +82,9 @@
                 "idemp": {
                     "allowNull": false,
                     "primaryKey": true,
+                    "autoIncrement": true,
                     "field": "idemp",
-                    "seqType": "Sequelize.INTEGER(11)"
+                    "seqType": "Sequelize.INTEGER"
                 },
                 "hireDate": {
                     "allowNull": false,
@@ -112,13 +113,14 @@
                 },
                 "userId": {
                     "allowNull": false,
+                    "unique": true,
                     "field": "userId",
                     "seqType": "Sequelize.STRING(45)"
                 },
                 "password": {
                     "allowNull": false,
                     "field": "password",
-                    "seqType": "Sequelize.STRING(45)"
+                    "seqType": "Sequelize.STRING"
                 },
                 "active": {
                     "allowNull": false,
@@ -127,6 +129,30 @@
                     },
                     "field": "active",
                     "seqType": "Sequelize.INTEGER(4)"
+                },
+                "deleted": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "deleted",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "admin": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "admin",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "punch": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "punch",
+                    "seqType": "Sequelize.BOOLEAN"
                 },
                 "createdAt": {
                     "allowNull": false,
@@ -155,7 +181,7 @@
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
-                    "seqType": "Sequelize.INTEGER(11)"
+                    "seqType": "Sequelize.INTEGER"
                 },
                 "week_start": {
                     "allowNull": false,
@@ -258,7 +284,7 @@
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
-                    "seqType": "Sequelize.INTEGER(11)"
+                    "seqType": "Sequelize.INTEGER"
                 },
                 "clock_in": {
                     "allowNull": true,
@@ -284,5 +310,5 @@
             "indexes": []
         }
     },
-    "revision": 1
+    "revision": 2
 }
