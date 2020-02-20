@@ -48,6 +48,12 @@
                 },
                 "idemp": {
                     "allowNull": false,
+                    "references": {
+                        "model": "emp",
+                        "key": "idemp"
+                    },
+                    "ondelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
@@ -178,6 +184,12 @@
                 },
                 "idemp": {
                     "allowNull": false,
+                    "references": {
+                        "model": "emp",
+                        "key": "idemp"
+                    },
+                    "ondelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
@@ -281,6 +293,12 @@
                     "seqType": "Sequelize.INTEGER(11)"
                 },
                 "idemp": {
+                    "references": {
+                        "model": "emp",
+                        "key": "idemp"
+                    },
+                    "ondelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
                     "model": "emp",
                     "foreignKey": "idemp",
                     "field": "idemp",
@@ -310,5 +328,5 @@
             "indexes": []
         }
     },
-    "revision": 2
+    "revision": 1
 }
