@@ -90,6 +90,10 @@ router.get('/admin', function (req, res, next) {
 });
 
 router.get('/logout', function (req, res, next) {
+  console.log('Logging User Out....');
+  res.cookie('jwt', '', { expires: new Date(0) });
+  console.log('User is Now Logged Out....');
+  res.redirect('/users/login');
     console.log('Logging User Out....');
     // (tokens have not been added) res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');
