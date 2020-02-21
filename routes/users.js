@@ -3,7 +3,7 @@ var router = express.Router();
 var models = require('../models');
 var authService = require('../services/auth');
 
-//USER LOGIN POST ROUTE
+//LOGIN POST ROUTE
 router.post('/login', function (req, res, next) {
     models.users.findOne({
         where: { Username: req.body.Username }
@@ -43,16 +43,22 @@ router.post('/login', function (req, res, next) {
         })
 });
 
+//LOGIN GET ROUTE
+router.get('/login', function (req, res, next) {
+    res.render('login');
+})
 
-/* GET users listing. */
+ //USER LISTING ROUTE
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
+//SIGNUP GET ROUTE
 router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
+//SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
     console.log('Checking Account Creation Requirements....')
     models.emp
@@ -79,19 +85,46 @@ router.post('/signup', function (req, res, next) {
         });
 });
 
-router.get('/login', function (req, res, next) {
-    res.render('login');
-})
-
-router.post('/login', function (req, res, next) {
-});
-
+//ADMIN GET ROUTE
 router.get('/admin', function (req, res, next) {
-});
+    let token = req.cookies.jwt;
+    if (token) {
+      authService.verifyUser(token)
+        .then(user => {
+          if (user.admin) {
+            models.users.findAll({
+              where: {
+                Deleted: false
+              }
+            }).then(usersFound => {
+              if (usersFound) {
+                console.log('FOUND USERS TO LIST....');
+                res.render('admin', {
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  username: user.username,
+                  email: user.email,
+                  list: usersFound,
+                })
+              } else {
+                res.send('Something Went Wrong!');
+              }
+            })
+          } else {
+            res.redirect('profile');
+          }
+        });
+    } else {
+      res.status(401);
+      res.send('Must be logged in');
+    }
+  
+  });
 
+//LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
     console.log('Logging User Out....');
-    // (tokens have not been added) res.cookie('jwt', '', { expires: new Date(0) });
+    res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');
     res.redirect('/users/login');
 });
