@@ -1,33 +1,36 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
+var emp = require('../models/emp');
 var authService = require('../services/auth');
 
 //LOGIN POST ROUTE
 router.post('/login', function (req, res, next) {
-    models.users.findOne({
-        where: { Username: req.body.Username }
+    console.log('Looking for user...');
+    models.emp.findOne({
+        where: { userId: req.body.userId }
     })
-        .then(user => {
-            if (!user) {
+        .then(userId => {
+            if (!userId) {
                 console.log('Invalid Login Attempt!')
-                res.render('badlogin');
+                //res.render('badlogin');
                 return
             } else {
                 let passwordMatch = authService
                     // CHECK IF THE PASSWORD MATCHES
-                    .comparePassword(req.body.Password, user.Password);
+                    .comparePassword(req.body.password, user.password);
                 if (passwordMatch) {
                     let token = authService.signUser(user);
                     res.cookie('jwt', token);
                     // IS THE USERS ACCOUNT SET TO DELETED?
-                    if (user.Deleted) {
+                    if (user.deleted) {
                         res.cookie('jwt', '', { expires: new Date(0) });
                         res.render('deleted');
                     } else {
                         // IF USER ADMIN DIRECT TO ADMIN PAGE
                         if (user.Admin) {
                             console.log('REDIRECTING TO ADMIN PAGE....');
+                            // REACT CODE GOES HERE
                             res.redirect('admin');
 
                         } else {
@@ -45,7 +48,9 @@ router.post('/login', function (req, res, next) {
 
 //LOGIN GET ROUTE
 router.get('/login', function (req, res, next) {
-    res.render('login');
+    res.send(JSON.stringify(
+      models.emp
+    ));
 })
 
  //USER LISTING ROUTE
@@ -86,40 +91,40 @@ router.post('/signup', function (req, res, next) {
 });
 
 //ADMIN GET ROUTE
-router.get('/admin', function (req, res, next) {
-    let token = req.cookies.jwt;
-    if (token) {
-      authService.verifyUser(token)
-        .then(user => {
-          if (user.admin) {
-            models.users.findAll({
-              where: {
-                Deleted: false
-              }
-            }).then(usersFound => {
-              if (usersFound) {
-                console.log('FOUND USERS TO LIST....');
-                res.render('admin', {
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  username: user.username,
-                  email: user.email,
-                  list: usersFound,
-                })
-              } else {
-                res.send('Something Went Wrong!');
-              }
-            })
-          } else {
-            res.redirect('profile');
-          }
-        });
-    } else {
-      res.status(401);
-      res.send('Must be logged in');
-    }
+// router.get('/admin', function (req, res, next) {
+//     let token = req.cookies.jwt;
+//     if (token) {
+//       authService.verifyUser(token)
+//         .then(user => {
+//           if (user.admin) {
+//             models.users.findAll({
+//               where: {
+//                 Deleted: false
+//               }
+//             }).then(usersFound => {
+//               if (usersFound) {
+//                 console.log('FOUND USERS TO LIST....');
+//                 res.render('admin', {
+//                   firstName: user.firstName,
+//                   lastName: user.lastName,
+//                   username: user.username,
+//                   email: user.email,
+//                   list: usersFound,
+//                 })
+//               } else {
+//                 res.send('Something Went Wrong!');
+//               }
+//             })
+//           } else {
+//             res.redirect('profile');
+//           }
+//         });
+//     } else {
+//       res.status(401);
+//       res.send('Must be logged in');
+//     }
   
-  });
+//   });
 
 //LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
