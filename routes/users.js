@@ -3,36 +3,45 @@ var router = express.Router();
 var models = require('../models');
 var authService = require('../services/auth');
 
-//USER LOGIN POST ROUTE
+//LOGIN POST ROUTE
 router.post('/login', function (req, res, next) {
-    models.users.findOne({
-        where: { Username: req.body.Username }
-    })
-        .then(user => {
-            if (!user) {
+     console.log('Looking for user...'),
+     console.log('Received ' )
+    models.emp.findOne({
+        where: { userId: req.body.userId }
+    }).then(userId => {
+            if (!userId) {
                 console.log('Invalid Login Attempt!')
-                res.render('badlogin');
+                //res.render('badlogin');
                 return
             } else {
+                console.log('Checking Password...')
                 let passwordMatch = authService
                     // CHECK IF THE PASSWORD MATCHES
-                    .comparePassword(req.body.Password, user.Password);
+                    .comparePassword(req.body.password, userId.password);
+                    console.log('Compared the Auth Passwords...')
                 if (passwordMatch) {
-                    let token = authService.signUser(user);
+                    let token = authService.signUser(userId);
                     res.cookie('jwt', token);
                     // IS THE USERS ACCOUNT SET TO DELETED?
-                    if (user.Deleted) {
+                    console.log('Browser is a good boy, gave a cookie!')
+                    if (userId.deleted) {
                         res.cookie('jwt', '', { expires: new Date(0) });
                         res.render('deleted');
+                        console.log('Account has been deleted...'),
+                        console.log('Deleted Assigned Cookie and Logged User back out!');
                     } else {
                         // IF USER ADMIN DIRECT TO ADMIN PAGE
-                        if (user.Admin) {
+                        if (userId.admin) {
                             console.log('REDIRECTING TO ADMIN PAGE....');
-                            res.redirect('admin');
+                            // REACT CODE GOES HERE
+                            res.redirect('http://localhost:3000/app/manager');
+                            console.log('Logged in as Admin!');
 
                         } else {
                             // IF USER NOT ADMIN, DIRECT TO PROFILE
-                            res.redirect('profile');
+                            res.redirect('http://localhost:3000/profile');
+                            console.log('Logged in as User');
                         }
                     }
                 } else {
@@ -43,16 +52,24 @@ router.post('/login', function (req, res, next) {
         })
 });
 
+//LOGIN GET ROUTE
+router.get('/login', function (req, res, next) {
+    res.send(JSON.stringify(
+      models.emp
+    ));
+})
 
-/* GET users listing. */
+ //USER LISTING ROUTE
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
+//SIGNUP GET ROUTE
 router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
+//SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
     console.log('Checking Account Creation Requirements....')
     models.emp
@@ -79,23 +96,50 @@ router.post('/signup', function (req, res, next) {
         });
 });
 
-router.get('/login', function (req, res, next) {
-    res.render('login');
-})
+//ADMIN GET ROUTE
+// router.get('/admin', function (req, res, next) {
+//     let token = req.cookies.jwt;
+//     if (token) {
+//       authService.verifyUser(token)
+//         .then(user => {
+//           if (user.admin) {
+//             models.users.findAll({
+//               where: {
+//                 Deleted: false
+//               }
+//             }).then(usersFound => {
+//               if (usersFound) {
+//                 console.log('FOUND USERS TO LIST....');
+//                 res.render('admin', {
+//                   firstName: user.firstName,
+//                   lastName: user.lastName,
+//                   username: user.username,
+//                   email: user.email,
+//                   list: usersFound,
+//                 })
+//               } else {
+//                 res.send('Something Went Wrong!');
+//               }
+//             })
+//           } else {
+//             res.redirect('profile');
+//           }
+//         });
+//     } else {
+//       res.status(401);
+//       res.send('Must be logged in');
+//     }
+  
+//   });
 
-router.post('/login', function (req, res, next) {
-});
-
-router.get('/admin', function (req, res, next) {
-});
-
+//LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
   console.log('Logging User Out....');
   res.cookie('jwt', '', { expires: new Date(0) });
   console.log('User is Now Logged Out....');
   res.redirect('/users/login');
     console.log('Logging User Out....');
-    // (tokens have not been added) res.cookie('jwt', '', { expires: new Date(0) });
+    res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');
     res.redirect('/users/login');
 });
