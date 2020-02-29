@@ -5,61 +5,75 @@ var authService = require('../services/auth');
 
 //LOGIN POST ROUTE
 router.post('/login', function (req, res, next) {
-     console.log('Looking for user...'),
-     console.log('Received ' )
+    console.log('Looking for user...'),
+        console.log('Received ')
     models.emp.findOne({
         where: { userId: req.body.userId }
     }).then(userId => {
-            if (!userId) {
-                console.log('Invalid Login Attempt!')
-                //res.render('badlogin');
-                return
-            } else {
-                console.log('Checking Password...')
-                let passwordMatch = authService
-                    // CHECK IF THE PASSWORD MATCHES
-                    .comparePassword(req.body.password, userId.password);
-                    console.log('Compared the Auth Passwords...')
-                if (passwordMatch) {
-                    let token = authService.signUser(userId);
-                    res.cookie('jwt', token);
-                    // IS THE USERS ACCOUNT SET TO DELETED?
-                    console.log('Browser is a good boy, gave a cookie!')
-                    if (userId.deleted) {
-                        res.cookie('jwt', '', { expires: new Date(0) });
-                        res.render('deleted');
-                        console.log('Account has been deleted...'),
+        if (!userId) {
+            console.log('Invalid Login Attempt!')
+            //res.render('badlogin');
+            return
+        } else {
+            console.log('Checking Password...')
+            let passwordMatch = authService
+                // CHECK IF THE PASSWORD MATCHES
+                .comparePassword(req.body.password, userId.password);
+            console.log('Compared the Auth Passwords...')
+            if (passwordMatch) {
+                let token = authService.signUser(userId);
+                res.cookie('jwt', token);
+                // IS THE USERS ACCOUNT SET TO DELETED?
+                console.log('Browser is a good boy, gave a cookie!')
+                if (userId.deleted) {
+                    res.cookie('jwt', '', { expires: new Date(0) });
+                    res.render('deleted');
+                    console.log('Account has been deleted...'),
                         console.log('Deleted Assigned Cookie and Logged User back out!');
-                    } else {
-                        // IF USER ADMIN DIRECT TO ADMIN PAGE
-                        if (userId.admin) {
-                            console.log('REDIRECTING TO ADMIN PAGE....');
-                            // REACT CODE GOES HERE
-                            res.redirect('http://localhost:3000/app/manager');
-                            console.log('Logged in as Admin!');
-
-                        } else {
-                            // IF USER NOT ADMIN, DIRECT TO PROFILE
-                            res.redirect('http://localhost:3000/profile');
-                            console.log('Logged in as User');
-                        }
-                    }
                 } else {
-                    console.log("Invalid Credentials!");
-                    res.render('badlogin');
-                }
-            }
-        })
+                    // IF USER ADMIN DIRECT TO ADMIN PAGE
+                    var sched = models.schedules;
+                    if (userId.admin) {
+                        console.log('REDIRECTING TO ADMIN PAGE....');
+                        res.json({
+                            logged_in_admin: true,
+                            emp: userId
+                    
+                            
+                        })
+                        console.log('Logged in as Admin!');
+                    } else if (userId.manager) {
+                        res.json({
+                            logged_in_manager: true,
+                            emp: userId
+                        })
+                        console.log('Logged in as User');
+                        console.log('REDIRECTIONG TO MANAGER PAGE....');
+                    } else {
+                        // IF USER NOT ADMIN OR MANAGER, DIRECT TO PROFILE
+                        res.json({
+                            logged_in: true,
+                            emp: userId
+                            
+                        })
+                        console.log('Logged in as User');
+                    }
+                };
+            } else {
+                console.log("Invalid Credentials!");
+            };
+        };
+    });
 });
 
 //LOGIN GET ROUTE
 router.get('/login', function (req, res, next) {
     res.send(JSON.stringify(
-      models.emp
+        models.emp
     ));
-})
+});
 
- //USER LISTING ROUTE
+//USER LISTING ROUTE
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
@@ -129,15 +143,15 @@ router.post('/signup', function (req, res, next) {
 //       res.status(401);
 //       res.send('Must be logged in');
 //     }
-  
+
 //   });
 
 //LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
-  console.log('Logging User Out....');
-  res.cookie('jwt', '', { expires: new Date(0) });
-  console.log('User is Now Logged Out....');
-  res.redirect('/users/login');
+    console.log('Logging User Out....');
+    res.cookie('jwt', '', { expires: new Date(0) });
+    console.log('User is Now Logged Out....');
+    res.redirect('/users/login');
     console.log('Logging User Out....');
     res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');

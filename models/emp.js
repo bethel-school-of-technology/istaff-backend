@@ -52,6 +52,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: false
     },
+    manager: {
+      tkype: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     punch: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
