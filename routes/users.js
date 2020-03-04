@@ -101,40 +101,39 @@ router.post("/signup", function(req, res, next) {
 });
 
 //ADMIN GET ROUTE
-// router.get('/admin', function (req, res, next) {
-//     let token = req.cookies.jwt;
-//     if (token) {
-//       authService.verifyUser(token)
-//         .then(user => {
-//           if (user.admin) {
-//             models.users.findAll({
-//               where: {
+//  router.get('/admin', function (req, res, next) {
+//   console.log("Finding user..."), console.log("Received ");
+//      let token = req.cookies.jwt;
+//      if (token) {
+//        authService.verifyUser(token)
+//          .then(userId => {
+//           if (userId.admin) {
+//              models.emp.findAll({
+//                where: {
 //                 Deleted: false
 //               }
-//             }).then(usersFound => {
-//               if (usersFound) {
-//                 console.log('FOUND USERS TO LIST....');
-//                 res.render('admin', {
+//              }).then(userIdFound => {
+//               if (userIdFound) {
+//                console.log('FOUND USERS TO LIST....');
+//                res.render('admin', {
 //                   firstName: user.firstName,
-//                   lastName: user.lastName,
-//                   username: user.username,
-//                   email: user.email,
-//                   list: usersFound,
-//                 })
+//                  lastName: user.lastName,
+//                   userId: userId.username,
+//                  })
 //               } else {
 //                 res.send('Something Went Wrong!');
 //               }
-//             })
+//              })
 //           } else {
 //             res.redirect('profile');
 //           }
 //         });
-//     } else {
-//       res.status(401);
-//       res.send('Must be logged in');
+//      } else {
+//        res.status(401);
+//        res.send('Must be logged in');
 //     }
 
-//   });
+//    });
 
 //LOGOUT GET ROUTE
 router.get("/logout", function(req, res, next) {

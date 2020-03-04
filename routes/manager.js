@@ -48,3 +48,45 @@ router.post('/login', function (req, res, next) {
 router.get('/login', function (req, res, next) {
     res.render('login');
 })
+// router.post("/:id", function (req, res, next) {
+//     let token = req.cookies.jwt;
+//     if (token) {
+//         authService.verifyUser(token).then(userId => {
+//             if (userId) {
+//                 if (user.admin,user.manager) {
+//                 let postid = parseInt(req.params.id);
+//                 console.log("ADMIN " + user.admin,emp.manager);
+//                 console.log(postid);
+//                 models.posts
+//                     .destroy({
+//                         where: { PostId: postid }
+//                     })
+//                     .then(() => {
+//                         emp.userId
+//                         res.redirect('/users/admin');
+//                     })   
+//                 } else {
+//                     let PostId = parseInt(req.params.id);
+//                 emp.posts
+//                     .update(
+//                         { Deleted: true },
+//                         {
+//                             where: { PostId: PostId }
+//                         }
+//                     )
+//                     .then(result => {
+//                         emp.users
+//                         res.redirect("/users/profile/");
+//                     });
+//                 }
+                
+                    
+//             } else {
+//                 res.send('NOT A USER!');
+//             }
+//         })
+
+//     } else {
+//         res.redirect('/users/login');
+//     }
+// });
