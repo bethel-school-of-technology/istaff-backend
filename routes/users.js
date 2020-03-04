@@ -8,7 +8,7 @@ router.post('/login', function (req, res, next) {
     console.log('Looking for user...'),
         console.log('Received ')
     models.emp.findOne({
-        where: { userId: req.body.userId }
+        where: { userId: req.body.userId}
     }).then(userId => {
         if (!userId) {
             console.log('Invalid Login Attempt!')
@@ -32,29 +32,35 @@ router.post('/login', function (req, res, next) {
                         console.log('Deleted Assigned Cookie and Logged User back out!');
                 } else {
                     // IF USER ADMIN DIRECT TO ADMIN PAGE
-                    var sched = models.schedules;
                     if (userId.admin) {
                         console.log('REDIRECTING TO ADMIN PAGE....');
                         res.json({
                             logged_in_admin: true,
-                            emp: userId
-                    
-                            
+                            emp: emp,
+                            jwt: token
                         })
                         console.log('Logged in as Admin!');
                     } else if (userId.manager) {
                         res.json({
                             logged_in_manager: true,
-                            emp: userId
+                            emp: userId,
+                            jwt: token
                         })
                         console.log('Logged in as User');
                         console.log('REDIRECTIONG TO MANAGER PAGE....');
-                    } else {
+                    } else { 
+
+                        models.schedules.findAll({
+                            where: { idemp: userId.idemp}
+                        }).then(idemp => {
+
                         // IF USER NOT ADMIN OR MANAGER, DIRECT TO PROFILE
                         res.json({
                             logged_in: true,
-                            emp: userId
-                            
+                            emp: userId,
+                            jwt: token,
+                            idemp: idemp
+                        })
                         })
                         console.log('Logged in as User');
                     }
@@ -85,6 +91,7 @@ router.get('/signup', function (req, res, next) {
 
 //SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
+
     console.log('Checking Account Creation Requirements....')
     models.emp
         .findOrCreate({
@@ -103,7 +110,6 @@ router.post('/signup', function (req, res, next) {
         .spread(function (result, created) {
             if (created) {
                 console.log('User Successfully Created!');
-                res.redirect('/users/login');
             } else {
                 res.send('User Name Does Not Meet The Requirements!');
             }
@@ -156,6 +162,10 @@ router.get('/logout', function (req, res, next) {
     res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');
     res.redirect('/users/login');
+});
+
+router.post('/schedule', function (req, res, next) {
+
 });
 
 module.exports = router;

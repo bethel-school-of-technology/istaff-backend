@@ -53,7 +53,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: false
     },
     manager: {
-      tkype: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
