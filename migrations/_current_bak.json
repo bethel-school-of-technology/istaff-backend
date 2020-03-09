@@ -37,34 +37,6 @@
             },
             "indexes": []
         },
-        "comp": {
-            "tableName": "comp",
-            "schema": {
-                "idcomp": {
-                    "allowNull": false,
-                    "primaryKey": true,
-                    "autoIncorument": true,
-                    "field": "idcomp",
-                    "seqType": "Sequelize.INTEGER"
-                },
-                "compName": {
-                    "allowNull": false,
-                    "field": "compName",
-                    "seqType": "Sequelize.STRING(45)"
-                },
-                "createdAt": {
-                    "allowNull": false,
-                    "field": "createdAt",
-                    "seqType": "Sequelize.DATE"
-                },
-                "updatedAt": {
-                    "allowNull": false,
-                    "field": "updatedAt",
-                    "seqType": "Sequelize.DATE"
-                }
-            },
-            "indexes": []
-        },
         "disciplinary": {
             "tableName": "disciplinary",
             "schema": {
@@ -359,5 +331,5 @@
             "indexes": []
         }
     },
-    "revision": 3
+    "revision": 2
 }
