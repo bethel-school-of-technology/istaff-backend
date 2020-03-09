@@ -8,6 +8,11 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    idcomp: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true
+    },
     hireDate: {
       type: DataTypes.DATEONLY,
       allowNull: false
@@ -59,6 +64,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     punch: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    email: {
+      type: DataTypes.email,
       allowNull: false,
       defaultValue: false
     }

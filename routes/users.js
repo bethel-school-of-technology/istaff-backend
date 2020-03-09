@@ -116,42 +116,6 @@ router.post('/signup', function (req, res, next) {
         });
 });
 
-//ADMIN GET ROUTE
-// router.get('/admin', function (req, res, next) {
-//     let token = req.cookies.jwt;
-//     if (token) {
-//       authService.verifyUser(token)
-//         .then(user => {
-//           if (user.admin) {
-//             models.users.findAll({
-//               where: {
-//                 Deleted: false
-//               }
-//             }).then(usersFound => {
-//               if (usersFound) {
-//                 console.log('FOUND USERS TO LIST....');
-//                 res.render('admin', {
-//                   firstName: user.firstName,
-//                   lastName: user.lastName,
-//                   username: user.username,
-//                   email: user.email,
-//                   list: usersFound,
-//                 })
-//               } else {
-//                 res.send('Something Went Wrong!');
-//               }
-//             })
-//           } else {
-//             res.redirect('profile');
-//           }
-//         });
-//     } else {
-//       res.status(401);
-//       res.send('Must be logged in');
-//     }
-
-//   });
-
 //LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
     console.log('Logging User Out....');
@@ -165,6 +129,37 @@ router.get('/logout', function (req, res, next) {
 });
 
 router.post('/schedule', function (req, res, next) {
+
+    console.log('Creating or Find Work Schedules...')
+    models.schedules
+        .findOrCreate({
+            where: { idschedules: req.body.idschedules },
+            defaults: {
+                idemp: req.body.idemp,
+                week_start: req.body.week_start,
+                mon_start: req.body.mon_start,
+                mon_end: req.body.mon_end,
+                tue_start: req.body.tue_start,
+                tue_end: req.body.tue_end,
+                wen_start: req.body.wen_start,
+                wen_end: req.body.wen_end,
+                thu_start: req.body.thu_start,
+                thu_end: req.body.thu_end,
+                fri_start: req.body.fri_start,
+                fri_end: req.body.fri_end,
+                sat_start: req.body.sat_start,
+                sat_end: req.body.sat_end,
+                sun_start: req.body.sun_start,
+                sun_end: req.body.sun_end
+            }
+        })
+        .spread(function (result, created) {
+            if (created) {
+                console.log('User Successfully Created!');
+            } else {
+                res.send('User Name Does Not Meet The Requirements!');
+            }
+        });
 
 });
 
