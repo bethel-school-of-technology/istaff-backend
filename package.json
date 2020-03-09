@@ -22,8 +22,8 @@
     "passport-local": "^1.0.0",
     "sequelize": "^4.43.0"
   },
-  "proxy":"http://localhost:3001",
-  "eslintConfig":{
+  "proxy": "http://localhost:3001",
+  "eslintConfig": {
     "extends": "react-app"
   },
   "devDependencies": {

@@ -11,7 +11,6 @@ module.exports = function(sequelize, DataTypes) {
     idcomp: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true
     },
     hireDate: {
       type: DataTypes.DATEONLY,
@@ -68,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: false
     },
     email: {
-      type: DataTypes.email,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: false
     }
