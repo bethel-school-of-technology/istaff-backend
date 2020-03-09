@@ -81,8 +81,14 @@ router.get('/login', function (req, res, next) {
 
 //USER LISTING ROUTE
 router.get('/', function (req, res, next) {
-    res.send('respond with a resource');
-});
+    models.emp
+    .findAll()
+    .then(employeesFound => {
+      //console.log(employeesFound);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(employeesFound));
+    });
+  });
 
 //SIGNUP GET ROUTE
 router.get('/signup', function (req, res, next) {
@@ -97,6 +103,7 @@ router.post('/signup', function (req, res, next) {
         .findOrCreate({
             where: { userId: req.body.userId },
             defaults: {
+                
                 hireDate: req.body.hireDate,
                 dob: req.body.dob,
                 firstName: req.body.firstName,
@@ -104,7 +111,9 @@ router.post('/signup', function (req, res, next) {
                 lastName: req.body.lastName,
                 userId: req.body.userId,
                 password: authService.hashPassword(req.body.password),
-                active: req.body.active
+                active: req.body.active,
+                email: req.body.email,
+                idcomp: req.body.idcomp
             }
         })
         .spread(function (result, created) {
