@@ -146,6 +146,14 @@
                     "field": "admin",
                     "seqType": "Sequelize.BOOLEAN"
                 },
+                "manager": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "manager",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
                 "punch": {
                     "allowNull": false,
                     "defaultValue": {
@@ -310,5 +318,5 @@
             "indexes": []
         }
     },
-    "revision": 2
+    "revision": 1
 }

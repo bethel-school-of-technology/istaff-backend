@@ -15,8 +15,8 @@ var Sequelize = require('sequelize');
 
 var info = {
     "revision": 1,
-    "name": "initial",
-    "created": "2020-02-19T05:45:40.169Z",
+    "name": "initial_migration",
+    "created": "2020-03-01T05:44:04.032Z",
     "comment": ""
 };
 
@@ -165,6 +165,12 @@ var migrationCommands = [{
                 "admin": {
                     "type": Sequelize.BOOLEAN,
                     "field": "admin",
+                    "defaultValue": false,
+                    "allowNull": false
+                },
+                "manager": {
+                    "type": Sequelize.BOOLEAN,
+                    "field": "manager",
                     "defaultValue": false,
                     "allowNull": false
                 },
