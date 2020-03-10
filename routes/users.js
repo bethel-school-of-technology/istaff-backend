@@ -112,12 +112,14 @@ router.post('/signup', function (req, res, next) {
                 userId: req.body.userId,
                 password: authService.hashPassword(req.body.password),
                 active: req.body.active,
+                manager: req.body.manager,
                 email: req.body.email,
                 idcomp: req.body.idcomp
             }
         })
         .spread(function (result, created) {
             if (created) {
+                res.send('User Successfully Created!');
                 console.log('User Successfully Created!');
             } else {
                 res.send('User Name Does Not Meet The Requirements!');
