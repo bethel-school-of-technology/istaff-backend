@@ -91,9 +91,12 @@ router.get('/login', function (req, res, next) {
 });
 
 //USER LISTING ROUTE
-router.get('/', function (req, res, next) {
+router.post('/', function (req, res, next) {
+    console.log(req.body.idcomp)
     models.emp
-        .findAll()
+        .findAll({
+            where: { idcomp: req.body.idcomp }
+        })
         .then(employeesFound => {
             //console.log(employeesFound);
             res.setHeader('Content-Type', 'application/json');
@@ -109,6 +112,7 @@ router.get('/signup', function (req, res, next) {
 //EMPLOYEE DELETE ROUTE
 router.delete("/:idemp", function (req, res, next) {
     let employeeId = parseInt(req.params.idemp);
+    console.log(employeeId)
     models.emp
       .destroy({
         where: { idemp: employeeId }
