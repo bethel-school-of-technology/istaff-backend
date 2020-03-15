@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     idtime_punch: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idemp: {
       type: DataTypes.INTEGER,

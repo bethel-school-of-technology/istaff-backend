@@ -6,6 +6,7 @@ var Sequelize = require('sequelize');
  * Actions summary:
  *
  * createTable "awards", deps: []
+ * createTable "comp", deps: []
  * createTable "disciplinary", deps: []
  * createTable "emp", deps: []
  * createTable "schedules", deps: []
@@ -16,7 +17,7 @@ var Sequelize = require('sequelize');
 var info = {
     "revision": 1,
     "name": "initial_migration",
-    "created": "2020-03-01T05:44:04.032Z",
+    "created": "2020-03-11T04:02:52.480Z",
     "comment": ""
 };
 
@@ -45,6 +46,37 @@ var migrationCommands = [{
                     "type": Sequelize.STRING(255),
                     "field": "award_details",
                     "allowNull": true
+                },
+                "createdAt": {
+                    "type": Sequelize.DATE,
+                    "field": "createdAt",
+                    "allowNull": false
+                },
+                "updatedAt": {
+                    "type": Sequelize.DATE,
+                    "field": "updatedAt",
+                    "allowNull": false
+                }
+            },
+            {}
+        ]
+    },
+    {
+        fn: "createTable",
+        params: [
+            "comp",
+            {
+                "idcomp": {
+                    "type": Sequelize.INTEGER,
+                    "field": "idcomp",
+                    "autoIncorument": true,
+                    "primaryKey": true,
+                    "allowNull": false
+                },
+                "compName": {
+                    "type": Sequelize.STRING(45),
+                    "field": "compName",
+                    "allowNull": false
                 },
                 "createdAt": {
                     "type": Sequelize.DATE,
@@ -114,6 +146,11 @@ var migrationCommands = [{
                     "primaryKey": true,
                     "allowNull": false
                 },
+                "idcomp": {
+                    "type": Sequelize.INTEGER,
+                    "field": "idcomp",
+                    "allowNull": false
+                },
                 "hireDate": {
                     "type": Sequelize.DATEONLY,
                     "field": "hireDate",
@@ -177,6 +214,12 @@ var migrationCommands = [{
                 "punch": {
                     "type": Sequelize.BOOLEAN,
                     "field": "punch",
+                    "defaultValue": false,
+                    "allowNull": false
+                },
+                "email": {
+                    "type": Sequelize.STRING,
+                    "field": "email",
                     "defaultValue": false,
                     "allowNull": false
                 },
@@ -309,6 +352,7 @@ var migrationCommands = [{
                 "idtime_punch": {
                     "type": Sequelize.INTEGER(11),
                     "field": "idtime_punch",
+                    "autoIncrement": true,
                     "primaryKey": true,
                     "allowNull": false
                 },

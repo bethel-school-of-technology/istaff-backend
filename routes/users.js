@@ -8,7 +8,7 @@ router.post('/login', function (req, res, next) {
     console.log('Looking for user...'),
         console.log('Received ')
     models.emp.findOne({
-        where: { userId: req.body.userId}
+        where: { userId: req.body.userId }
     }).then(userId => {
         if (!userId) {
             console.log('Invalid Login Attempt!')
@@ -36,32 +36,43 @@ router.post('/login', function (req, res, next) {
                         console.log('REDIRECTING TO ADMIN PAGE....');
                         res.json({
                             logged_in_admin: true,
-                            emp: emp,
-                            jwt: token
+                            emp: userId,
+                            //punch: punch,
+                            jwt: token,
+                            idemp: idemp
                         })
                         console.log('Logged in as Admin!');
                     } else if (userId.manager) {
                         res.json({
                             logged_in_manager: true,
                             emp: userId,
-                            jwt: token
+                            //punch: punch,
+                            jwt: token,
+                            //idemp: idemp
                         })
                         console.log('Logged in as User');
                         console.log('REDIRECTIONG TO MANAGER PAGE....');
-                    } else { 
+                    } else {
 
                         models.schedules.findAll({
-                            where: { idemp: userId.idemp}
+                            where: { idemp: userId.idemp }
                         }).then(idemp => {
 
-                        // IF USER NOT ADMIN OR MANAGER, DIRECT TO PROFILE
-                        res.json({
-                            logged_in: true,
-                            emp: userId,
-                            jwt: token,
-                            idemp: idemp
+                            models.time_punch.findOrCreate({
+                                where: { idemp: userId.idemp },
+                                order: [['createdAt', 'DESC']],
+                            }).then(idtime_punch => {
+                                res.json({
+                                    time_punch: idtime_punch,
+                                    logged_in: true,
+                                    emp: userId,
+                                    jwt: token,
+                                    idemp: idemp
+                                })
+                                //console.log(idtime_punch.idtime_punch);
+                            })
                         })
-                        })
+
                         console.log('Logged in as User');
                     }
                 };
@@ -82,13 +93,13 @@ router.get('/login', function (req, res, next) {
 //USER LISTING ROUTE
 router.get('/', function (req, res, next) {
     models.emp
-    .findAll()
-    .then(employeesFound => {
-      //console.log(employeesFound);
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(employeesFound));
-    });
-  });
+        .findAll()
+        .then(employeesFound => {
+            //console.log(employeesFound);
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(employeesFound));
+        });
+});
 
 //SIGNUP GET ROUTE
 router.get('/signup', function (req, res, next) {
@@ -103,7 +114,7 @@ router.post('/signup', function (req, res, next) {
         .findOrCreate({
             where: { userId: req.body.userId },
             defaults: {
-                
+
                 hireDate: req.body.hireDate,
                 dob: req.body.dob,
                 firstName: req.body.firstName,
@@ -129,10 +140,6 @@ router.post('/signup', function (req, res, next) {
 
 //LOGOUT GET ROUTE
 router.get('/logout', function (req, res, next) {
-    console.log('Logging User Out....');
-    res.cookie('jwt', '', { expires: new Date(0) });
-    console.log('User is Now Logged Out....');
-    res.redirect('/users/login');
     console.log('Logging User Out....');
     res.cookie('jwt', '', { expires: new Date(0) });
     console.log('User is Now Logged Out....');
@@ -174,4 +181,79 @@ router.post('/schedule', function (req, res, next) {
 
 });
 
+router.post('/punch', function (req, res, next) {
+    console.log('Clocking In or Out...')
+    models.time_punch
+        .findOne({
+            where: { idtime_punch: req.body.idtime_punch },
+            defaults: {
+                idemp: req.body.idemp,
+                clock_in: req.body.clock_in,
+                clock_out: req.body.clock_out
+            }
+        })
+    console.log('Found Record')
+    console.log('Updating Punch Record...')
+    models.time_punch
+        .update({ clock_in: req.body.clock_in, clock_out: req.body.clock_out },
+            {
+                where: { idtime_punch: req.body.idtime_punch },
+                defaults: {
+                    idemp: req.body.idemp,
+                    clock_in: req.body.clock_in,
+                    clock_out: req.body.clock_out
+                }
+            }).then(idtime_punch => {
+
+                models.time_punch
+                    .findOne({
+                        where: { idtime_punch: req.body.idtime_punch },
+                        defaults: {
+                            idemp: idtime_punch.idemp
+                        }
+
+                    }).then(resp => {
+                        console.log(resp.clock_out)
+                        if (resp.clock_out) {
+                            console.log('If Clockout Not Null...')
+                            console.log(resp.idemp)
+                            models.time_punch
+                                .create({
+                                    idemp: resp.idemp
+                                    
+                                }).then(response => {
+                                    console.log(resp.idemp)
+                                    res.json({
+                                        idtime_punch: response.idtime_punch
+                                    })
+                                })
+                        } else {
+                            res.send('Clocked In!')
+                            console.log('If Clockout Not Updated and still Null...')
+                            //console.log(idtime_punch)
+                        }
+                    })
+
+
+
+
+
+            })
+
+
+    // console.log('Clocking In or Out...')
+    // models.time_punch
+    //     .findOne({
+    //         where: { idtime_punch: req.body.idtime_punch },
+    //         defaults: {
+    //             idemp: req.body.idemp,
+    //             clock_in: req.body.clock_in,
+    //             clock_out: req.body.clock_out
+    //         }
+    //     }).then(console.log('THIS IS NOT FUN')), 
+    //         res.json({
+    //             idtime_punch: idtime_punch
+    //         })
+
+})
 module.exports = router;
