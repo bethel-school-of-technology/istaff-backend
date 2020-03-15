@@ -106,6 +106,21 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
+//EMPLOYEE DELETE ROUTE
+router.delete("/:idemp", function (req, res, next) {
+    let employeeId = parseInt(req.params.idemp);
+    models.emp
+      .destroy({
+        where: { idemp: employeeId }
+      })
+      .then(result => res.status(200).send('User deleted!'))
+      .catch(err => {
+        res.status(400);
+        res.send("There was a problem deleting the employee. Please make sure you are specifying the correct employee ID.");
+      }
+      );
+  });
+
 //SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
 
