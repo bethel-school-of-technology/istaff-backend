@@ -39,7 +39,7 @@ router.post('/login', function (req, res, next) {
                             emp: userId,
                             //punch: punch,
                             jwt: token,
-                            idemp: idemp
+                            idemp: userId
                         })
                         console.log('Logged in as Admin!');
                     } else if (userId.manager) {
@@ -275,4 +275,22 @@ router.post('/punch', function (req, res, next) {
     //         })
 
 })
+router.post("/:idemp", function (req, res, next) {
+    let employeeId = parseInt(req.params.idemp);
+    // let active = this.state.users;
+    console.log(employeeId)
+    console.log(active)
+    models.emp
+      .update({ active: req.params.active },{
+        where: { idemp: employeeId },
+        //defaults:{active:'0'}
+      })
+      .then(result => res.status(200).send('User deactivated!'))
+      .catch(err => {
+        res.status(400);
+        res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
+      }
+      );
+  });
+
 module.exports = router;
