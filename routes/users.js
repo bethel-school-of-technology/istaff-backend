@@ -25,11 +25,11 @@ router.post('/login', function (req, res, next) {
                 res.cookie('jwt', token);
                 // IS THE USERS ACCOUNT SET TO DELETED?
                 console.log('Browser is a good boy, gave a cookie!')
-                if (userId.deleted) {
+                if (!userId.active) {
                     res.cookie('jwt', '', { expires: new Date(0) });
-                    res.render('deleted');
                     console.log('Account has been deleted...'),
                         console.log('Deleted Assigned Cookie and Logged User back out!');
+                    res.send({})
                 } else {
                     // IF USER ADMIN DIRECT TO ADMIN PAGE
                     if (userId.admin) {
@@ -114,47 +114,63 @@ router.delete("/:idemp", function (req, res, next) {
     let employeeId = parseInt(req.params.idemp);
     console.log(employeeId)
     models.emp
-      .destroy({
-        where: { idemp: employeeId }
-      })
-      .then(result => res.status(200).send('User deleted!'))
-      .catch(err => {
-        res.status(400);
-        res.send("There was a problem deleting the employee. Please make sure you are specifying the correct employee ID.");
-      }
-      );
-  });
+        .destroy({
+            where: { idemp: employeeId }
+        })
+        .then(result => res.status(200).send('User deleted!'))
+        .catch(err => {
+            res.status(400);
+            res.send("There was a problem deleting the employee. Please make sure you are specifying the correct employee ID.");
+        }
+        );
+});
 
 //SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
 
     console.log('Checking Account Creation Requirements....')
-    models.emp
-        .findOrCreate({
-            where: { userId: req.body.userId },
-            defaults: {
+    console.log(req.body.jwt)
+    let token = req.body.jwt;
+    console.log('Created Variable - token!')
+    verifyUser(token)
+    console.log(userId.manager)
+    if (token) {
+        console.log('Received Token!')
+        // var decoded = jwt.decode(token, app.get('verifyUser'));
+        // console.log(decoded)
+        if (decoded.manager) {
+            console.log('Decoded Token!')
+            models.emp
+                .findOrCreate({
+                    where: { userId: req.body.userId },
+                    defaults: {
 
-                hireDate: req.body.hireDate,
-                dob: req.body.dob,
-                firstName: req.body.firstName,
-                middleName: req.body.middleName,
-                lastName: req.body.lastName,
-                userId: req.body.userId,
-                password: authService.hashPassword(req.body.password),
-                active: req.body.active,
-                manager: req.body.manager,
-                email: req.body.email,
-                idcomp: req.body.idcomp
-            }
-        })
-        .spread(function (result, created) {
-            if (created) {
-                res.send('User Successfully Created!');
-                console.log('User Successfully Created!');
-            } else {
-                res.send('User Name Does Not Meet The Requirements!');
-            }
-        });
+                        hireDate: req.body.hireDate,
+                        dob: req.body.dob,
+                        firstName: req.body.firstName,
+                        middleName: req.body.middleName,
+                        lastName: req.body.lastName,
+                        userId: req.body.userId,
+                        password: authService.hashPassword(req.body.password),
+                        active: req.body.active,
+                        manager: req.body.manager,
+                        email: req.body.email,
+                        idcomp: req.body.idcomp
+                    }
+                }).spread(function (result, created) {
+                    if (created) {
+                        res.send('User Successfully Created!');
+                        console.log('User Successfully Created!');
+                    } else {
+                        res.send('User Name Does Not Meet The Requirements!');
+                    }
+                });
+        } else {
+            res.send('You are not logged in or a manager!')
+        }
+    } else {
+        console.log('testing')
+    }
 });
 
 //LOGOUT GET ROUTE
@@ -165,132 +181,171 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/users/login');
 });
 
-router.post('/schedule', function (req, res, next) {
 
-    console.log('Creating or Find Work Schedules...')
-    models.schedules
-        .findOrCreate({
-            where: { idschedules: req.body.idschedules },
-            defaults: {
-                idemp: req.body.idemp,
-                week_start: req.body.week_start,
-                mon_start: req.body.mon_start,
-                mon_end: req.body.mon_end,
-                tue_start: req.body.tue_start,
-                tue_end: req.body.tue_end,
-                wen_start: req.body.wen_start,
-                wen_end: req.body.wen_end,
-                thu_start: req.body.thu_start,
-                thu_end: req.body.thu_end,
-                fri_start: req.body.fri_start,
-                fri_end: req.body.fri_end,
-                sat_start: req.body.sat_start,
-                sat_end: req.body.sat_end,
-                sun_start: req.body.sun_start,
-                sun_end: req.body.sun_end
-            }
+router.post('/schedules', function (req, res, next) {
+    console.log('Getting Schedule')
+    models.schedules.findAll({
+        where: { idemp: req.body.idemp }
+        }).then(idschedules => {
+            res.json({
+                idschedules : idschedules
+            })
         })
-        .spread(function (result, created) {
-            if (created) {
-                console.log('User Successfully Created!');
-            } else {
-                res.send('User Name Does Not Meet The Requirements!');
-            }
+    });
+
+
+        router.post('/schedule', function (req, res, next) {
+
+            console.log('Creating or Find Work Schedules...')
+            models.schedules
+                .findOrCreate({
+                    where: { idschedules: req.body.idschedules },
+                    defaults: {
+                        idemp: req.body.idemp,
+                        week_start: req.body.week_start,
+                        mon_start: req.body.mon_start,
+                        mon_end: req.body.mon_end,
+                        tue_start: req.body.tue_start,
+                        tue_end: req.body.tue_end,
+                        wen_start: req.body.wen_start,
+                        wen_end: req.body.wen_end,
+                        thu_start: req.body.thu_start,
+                        thu_end: req.body.thu_end,
+                        fri_start: req.body.fri_start,
+                        fri_end: req.body.fri_end,
+                        sat_start: req.body.sat_start,
+                        sat_end: req.body.sat_end,
+                        sun_start: req.body.sun_start,
+                        sun_end: req.body.sun_end
+                    }
+                })
+                .spread(function (result, created) {
+                    if (created) {
+                        console.log('User Successfully Created!');
+                    } else {
+                        res.send('User Name Does Not Meet The Requirements!');
+                    }
+                });
+
         });
 
-});
-
-router.post('/punch', function (req, res, next) {
-    console.log('Clocking In or Out...')
-    models.time_punch
-        .findOne({
-            where: { idtime_punch: req.body.idtime_punch },
-            defaults: {
-                idemp: req.body.idemp,
-                clock_in: req.body.clock_in,
-                clock_out: req.body.clock_out
-            }
-        })
-    console.log('Found Record')
-    console.log('Updating Punch Record...')
-    models.time_punch
-        .update({ clock_in: req.body.clock_in, clock_out: req.body.clock_out },
-            {
-                where: { idtime_punch: req.body.idtime_punch },
-                defaults: {
-                    idemp: req.body.idemp,
-                    clock_in: req.body.clock_in,
-                    clock_out: req.body.clock_out
-                }
-            }).then(idtime_punch => {
-
-                models.time_punch
-                    .findOne({
+        router.post('/punch', function (req, res, next) {
+            console.log('Clocking In or Out...')
+            models.time_punch
+                .findOne({
+                    where: { idtime_punch: req.body.idtime_punch },
+                    defaults: {
+                        idemp: req.body.idemp,
+                        clock_in: req.body.clock_in,
+                        clock_out: req.body.clock_out
+                    }
+                })
+            console.log('Found Record')
+            console.log('Updating Punch Record...')
+            models.time_punch
+                .update({ clock_in: req.body.clock_in, clock_out: req.body.clock_out },
+                    {
                         where: { idtime_punch: req.body.idtime_punch },
                         defaults: {
-                            idemp: idtime_punch.idemp
+                            idemp: req.body.idemp,
+                            clock_in: req.body.clock_in,
+                            clock_out: req.body.clock_out
                         }
+                    }).then(idtime_punch => {
 
-                    }).then(resp => {
-                        console.log(resp.clock_out)
-                        if (resp.clock_out) {
-                            console.log('If Clockout Not Null...')
-                            console.log(resp.idemp)
-                            models.time_punch
-                                .create({
-                                    idemp: resp.idemp
-                                    
-                                }).then(response => {
+                        models.time_punch
+                            .findOne({
+                                where: { idtime_punch: req.body.idtime_punch },
+                                defaults: {
+                                    idemp: idtime_punch.idemp
+                                }
+
+                            }).then(resp => {
+                                console.log(resp.clock_out)
+                                if (resp.clock_out) {
+                                    console.log('If Clockout Not Null...')
                                     console.log(resp.idemp)
-                                    res.json({
-                                        idtime_punch: response.idtime_punch
-                                    })
-                                })
-                        } else {
-                            res.send('Clocked In!')
-                            console.log('If Clockout Not Updated and still Null...')
-                            //console.log(idtime_punch)
-                        }
+                                    models.time_punch
+                                        .create({
+                                            idemp: resp.idemp
+
+                                        }).then(response => {
+                                            console.log(resp.idemp)
+                                            res.json({
+                                                idtime_punch: response.idtime_punch
+                                            })
+                                        })
+                                } else {
+                                    res.send('Clocked In!')
+                                    console.log('If Clockout Not Updated and still Null...')
+                                    //console.log(idtime_punch)
+                                }
+                            })
+
+
+
+
+
                     })
 
 
+            // console.log('Clocking In or Out...')
+            // models.time_punch
+            //     .findOne({
+            //         where: { idtime_punch: req.body.idtime_punch },
+            //         defaults: {
+            //             idemp: req.body.idemp,
+            //             clock_in: req.body.clock_in,
+            //             clock_out: req.body.clock_out
+            //         }
+            //     }).then(console.log('THIS IS NOT FUN')), 
+            //         res.json({
+            //             idtime_punch: idtime_punch
+            //         })
 
+        })
 
+        router.post("/emps", function (req, res, next) {
+            console.log('Resetting Password');
+            console.log(req.body)
+            models.emp
+                .findOne({
+                    where: { email: req.body.email },
+                    defaults: {
+                        password: req.body.password,
+                        email: req.body.email
+                    }
+                })
+            console.log('Found User')
+            console.log()
+            models.emp
+                .update({ password: authService.hashPassword(req.body.password) },
+                    { where: { email: req.body.email } }, {
+                    defaults: {
+                        email: req.body.email,
+                        password: authService.hashPassword(req.body.password)
+                    }
 
-            })
+                }).then()
+            res.send('Password Reset!')
+        });
 
+        router.post("/:idemp", function (req, res, next) {
+            let employeeId = parseInt(req.params.idemp);
+            // let active = this.state.users;
+            console.log(employeeId)
+            console.log(active)
+            models.emp
+                .update({ active: req.params.active }, {
+                    where: { idemp: employeeId },
+                    //defaults:{active:'0'}
+                })
+                .then(result => res.status(200).send('User deactivated!'))
+                .catch(err => {
+                    res.status(400);
+                    res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
+                }
+                );
+        });
 
-    // console.log('Clocking In or Out...')
-    // models.time_punch
-    //     .findOne({
-    //         where: { idtime_punch: req.body.idtime_punch },
-    //         defaults: {
-    //             idemp: req.body.idemp,
-    //             clock_in: req.body.clock_in,
-    //             clock_out: req.body.clock_out
-    //         }
-    //     }).then(console.log('THIS IS NOT FUN')), 
-    //         res.json({
-    //             idtime_punch: idtime_punch
-    //         })
-
-})
-router.post("/:idemp", function (req, res, next) {
-    let employeeId = parseInt(req.params.idemp);
-    // let active = this.state.users;
-    console.log(employeeId)
-    console.log(active)
-    models.emp
-      .update({ active: req.params.active },{
-        where: { idemp: employeeId },
-        //defaults:{active:'0'}
-      })
-      .then(result => res.status(200).send('User deactivated!'))
-      .catch(err => {
-        res.status(400);
-        res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
-      }
-      );
-  });
-
-module.exports = router;
+        module.exports = router;
