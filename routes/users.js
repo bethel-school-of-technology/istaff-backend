@@ -90,7 +90,7 @@ router.get('/login', function (req, res, next) {
     ));
 });
 
-//USER LISTING ROUTE
+//USER LISTING ROUTE ---add active only
 router.post('/', function (req, res, next) {
     console.log(req.body.idcomp)
     models.emp
@@ -158,12 +158,14 @@ router.post('/signup', function (req, res, next) {
 });
 
 //LOGOUT GET ROUTE
-router.get('/logout', function (req, res, next) {
-    console.log('Logging User Out....');
-    res.cookie('jwt', '', { expires: new Date(0) });
-    console.log('User is Now Logged Out....');
-    res.redirect('/users/login');
-});
+router.delete('/logout', function (req, res, next){
+    res.json({
+        not_logged_in: 'NOT_LOGGED_IN'
+    })
+})
+   
+    
+
 
 router.post('/schedule', function (req, res, next) {
 
@@ -275,13 +277,15 @@ router.post('/punch', function (req, res, next) {
     //         })
 
 })
+
+// Deactivate User Route
 router.post("/:idemp", function (req, res, next) {
     let employeeId = parseInt(req.params.idemp);
-    // let active = this.state.users;
+    let active = req.body.active;
     console.log(employeeId)
     console.log(active)
     models.emp
-      .update({ active: req.params.active },{
+      .update({ active: req.body.active },{
         where: { idemp: employeeId },
         //defaults:{active:'0'}
       })
@@ -291,6 +295,5 @@ router.post("/:idemp", function (req, res, next) {
         res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
       }
       );
-  });
-
+})
 module.exports = router;
