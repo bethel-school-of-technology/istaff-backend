@@ -3,21 +3,26 @@ const models = require('../models');
 const bcrypt = require('bcryptjs');
 
 var authService = {
-    signUser: function(user){
+    signUser: function(userId){
+        console.log('Baking Cookies!!!')
         const token = jwt.sign({
-            UserName: user.UserName,
-            UserId: user.UserId,
-            Admin: user.Admin
+            Idemp: userId.idemp,
+            UserId: userId.userId,
+            Admin: userId.admin,
+            Manager: userId.manager
+
         }, 'thesaltpassword',
         {
             expiresIn: '1h'
         });
+        console.log('Created Token')
         return token;
     },
     verifyUser: function(token){
         try {
             let decoded = jwt.verify(token, 'thesaltpassword');
-            return models.users.findByPk(decoded.UserId);
+            console.log(decoded)
+            return models.emp./*findByPk*/findOne(decoded.userId);
         } catch (err) {
             console.log(err);
             return null;
