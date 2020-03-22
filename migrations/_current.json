@@ -220,7 +220,8 @@
             "tableName": "schedules",
             "schema": {
                 "idschedules": {
-                    "allowNull": false,
+                    "allowNull": true,
+                    "autoIncrement": true,
                     "primaryKey": true,
                     "field": "idschedules",
                     "seqType": "Sequelize.INTEGER(11)"
@@ -240,72 +241,72 @@
                 "mon_start": {
                     "allowNull": true,
                     "field": "mon_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "mon_end": {
                     "allowNull": true,
                     "field": "mon_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "tue_start": {
                     "allowNull": true,
                     "field": "tue_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "tue_end": {
                     "allowNull": true,
                     "field": "tue_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "wen_start": {
                     "allowNull": true,
                     "field": "wen_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "wen_end": {
                     "allowNull": true,
                     "field": "wen_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "thu_start": {
                     "allowNull": true,
                     "field": "thu_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "thu_end": {
                     "allowNull": true,
                     "field": "thu_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "fri_start": {
                     "allowNull": true,
                     "field": "fri_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "fri_end": {
                     "allowNull": true,
                     "field": "fri_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "sat_start": {
                     "allowNull": true,
                     "field": "sat_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "sat_end": {
                     "allowNull": true,
                     "field": "sat_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "sun_start": {
                     "allowNull": true,
                     "field": "sun_start",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "sun_end": {
                     "allowNull": true,
                     "field": "sun_end",
-                    "seqType": "Sequelize.DATE"
+                    "seqType": "Sequelize.TIME"
                 },
                 "createdAt": {
                     "allowNull": false,
