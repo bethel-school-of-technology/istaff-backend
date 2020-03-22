@@ -209,6 +209,7 @@ router.post('/updateAccount', function (req, res, next) {
                             password: authService.hashPassword(req.body.password),
                             manager: req.body.manager,
                             email: req.body.email,
+                            active: req.body.active
                         }, {
                             where: { idemp: req.body.idemp },
                             defaults: {
@@ -223,7 +224,8 @@ router.post('/updateAccount', function (req, res, next) {
                                 active: req.body.active,
                                 manager: req.body.manager,
                                 email: req.body.email,
-                                idcomp: req.body.idcomp
+                                idcomp: req.body.idcomp,
+                                active: req.body.active
                             }
                         }).spread(function (result, created) {
                             if (result) {
