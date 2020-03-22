@@ -16,8 +16,8 @@ var Sequelize = require('sequelize');
 
 var info = {
     "revision": 1,
-    "name": "josh_lemons",
-    "created": "2020-03-16T03:19:56.034Z",
+    "name": "initial_migration",
+    "created": "2020-03-22T17:59:25.617Z",
     "comment": ""
 };
 
@@ -246,7 +246,8 @@ var migrationCommands = [{
                     "type": Sequelize.INTEGER(11),
                     "field": "idschedules",
                     "primaryKey": true,
-                    "allowNull": false
+                    "autoIncrement": true,
+                    "allowNull": true
                 },
                 "idemp": {
                     "type": Sequelize.INTEGER,
@@ -261,72 +262,72 @@ var migrationCommands = [{
                     "allowNull": false
                 },
                 "mon_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "mon_start",
                     "allowNull": true
                 },
                 "mon_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "mon_end",
                     "allowNull": true
                 },
                 "tue_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "tue_start",
                     "allowNull": true
                 },
                 "tue_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "tue_end",
                     "allowNull": true
                 },
                 "wen_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "wen_start",
                     "allowNull": true
                 },
                 "wen_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "wen_end",
                     "allowNull": true
                 },
                 "thu_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "thu_start",
                     "allowNull": true
                 },
                 "thu_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "thu_end",
                     "allowNull": true
                 },
                 "fri_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "fri_start",
                     "allowNull": true
                 },
                 "fri_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "fri_end",
                     "allowNull": true
                 },
                 "sat_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "sat_start",
                     "allowNull": true
                 },
                 "sat_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "sat_end",
                     "allowNull": true
                 },
                 "sun_start": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "sun_start",
                     "allowNull": true
                 },
                 "sun_end": {
-                    "type": Sequelize.DATE,
+                    "type": Sequelize.TIME,
                     "field": "sun_end",
                     "allowNull": true
                 },

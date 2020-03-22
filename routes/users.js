@@ -21,15 +21,16 @@ router.post('/login', function (req, res, next) {
                 .comparePassword(req.body.password, userId.password);
             console.log('Compared the Auth Passwords...')
             if (passwordMatch) {
+                console.log(userId.userId)
                 let token = authService.signUser(userId);
                 res.cookie('jwt', token);
                 // IS THE USERS ACCOUNT SET TO DELETED?
                 console.log('Browser is a good boy, gave a cookie!')
-                if (userId.deleted) {
+                if (!userId.active) {
                     res.cookie('jwt', '', { expires: new Date(0) });
-                    res.render('deleted');
                     console.log('Account has been deleted...'),
                         console.log('Deleted Assigned Cookie and Logged User back out!');
+                    res.send({})
                 } else {
                     // IF USER ADMIN DIRECT TO ADMIN PAGE
                     if (userId.admin) {
@@ -39,7 +40,8 @@ router.post('/login', function (req, res, next) {
                             emp: userId,
                             //punch: punch,
                             jwt: token,
-                            idemp: userId
+                            idemp: userId,
+                            userId: userId
                         })
                         console.log('Logged in as Admin!');
                     } else if (userId.manager) {
@@ -49,6 +51,7 @@ router.post('/login', function (req, res, next) {
                             //punch: punch,
                             jwt: token,
                             //idemp: idemp
+                            userId: userId
                         })
                         console.log('Logged in as User');
                         console.log('REDIRECTIONG TO MANAGER PAGE....');
@@ -67,7 +70,8 @@ router.post('/login', function (req, res, next) {
                                     logged_in: true,
                                     emp: userId,
                                     jwt: token,
-                                    idemp: idemp
+                                    idemp: idemp,
+                                    userId: userId
                                 })
                                 //console.log(idtime_punch.idtime_punch);
                             })
@@ -104,6 +108,7 @@ router.post('/', function (req, res, next) {
         });
 });
 
+
 //SIGNUP GET ROUTE
 router.get('/signup', function (req, res, next) {
     res.render('signup');
@@ -114,47 +119,134 @@ router.delete("/:idemp", function (req, res, next) {
     let employeeId = parseInt(req.params.idemp);
     console.log(employeeId)
     models.emp
-      .destroy({
-        where: { idemp: employeeId }
-      })
-      .then(result => res.status(200).send('User deleted!'))
-      .catch(err => {
-        res.status(400);
-        res.send("There was a problem deleting the employee. Please make sure you are specifying the correct employee ID.");
-      }
-      );
-  });
+        .destroy({
+            where: { idemp: employeeId }
+        })
+        .then(result => res.status(200).send('User deleted!'))
+        .catch(err => {
+            res.status(400);
+            res.send("There was a problem deleting the employee. Please make sure you are specifying the correct employee ID.");
+        }
+        );
+});
 
 //SIGNUP POST ROUTE
 router.post('/signup', function (req, res, next) {
+    if (req.body.jwt) {
 
-    console.log('Checking Account Creation Requirements....')
-    models.emp
-        .findOrCreate({
-            where: { userId: req.body.userId },
-            defaults: {
+        console.log('Checking Account Creation Requirements....')
+        let token = req.body.jwt;
+        console.log('Created Variable - token!')
+        if (token) {
+            console.log('Received Token!')
+            authService.verifyUser(token).then(userId => {
+                console.log('Auth Service Check Complete')
+                if (userId.admin || userId.manager) {
+                    console.log('Creating User')
+                    models.emp
+                        .findOrCreate({
+                            where: { userId: req.body.userId },
+                            defaults: {
 
-                hireDate: req.body.hireDate,
-                dob: req.body.dob,
-                firstName: req.body.firstName,
-                middleName: req.body.middleName,
-                lastName: req.body.lastName,
-                userId: req.body.userId,
-                password: authService.hashPassword(req.body.password),
-                active: req.body.active,
-                manager: req.body.manager,
-                email: req.body.email,
-                idcomp: req.body.idcomp
-            }
-        })
-        .spread(function (result, created) {
-            if (created) {
-                res.send('User Successfully Created!');
-                console.log('User Successfully Created!');
-            } else {
-                res.send('User Name Does Not Meet The Requirements!');
-            }
-        });
+                                hireDate: req.body.hireDate,
+                                dob: req.body.dob,
+                                firstName: req.body.firstName,
+                                middleName: req.body.middleName,
+                                lastName: req.body.lastName,
+                                userId: req.body.userId,
+                                password: authService.hashPassword(req.body.password),
+                                active: req.body.active,
+                                manager: req.body.manager,
+                                email: req.body.email,
+                                idcomp: req.body.idcomp
+                            }
+                        }).spread(function (result, created) {
+                            if (created) {
+                                res.send('User Successfully Created!');
+                                console.log('User Successfully Created!');
+                            } else {
+                                res.send('User Name Does Not Meet The Requirements!');
+                            }
+                        });
+                } else {
+                    res.send('You are not logged in or a manager!')
+                }
+            })
+
+        } else {
+            console.log('testing')
+        }
+    } else {
+        console.log('Access Denied!')
+        res.send('Access Denied')
+    }
+});
+
+//UPDATE ACCOUNT POST ROUTE
+router.post('/updateAccount', function (req, res, next) {
+    if (req.body.jwt) {
+
+        console.log('Checking Account Creation Requirements....')
+        let token = req.body.jwt;
+        console.log('Created Variable - token!')
+        if (token) {
+            console.log('Received Token!')
+            authService.verifyUser(token).then(userId => {
+                console.log('Auth Service Check Complete')
+                if (userId.admin || userId.manager) {
+                    console.log('Updating User')
+                    console.log(req.body.idemp)
+                    models.emp
+                        .update({
+                            idemp: req.body.idemp,
+                            userId: req.body.userId,
+                            hireDate: req.body.hireDate,
+                            dob: req.body.dob,
+                            firstName: req.body.firstName,
+                            middleName: req.body.middleName,
+                            lastName: req.body.lastName,
+                            userId: req.body.userId,
+                            password: authService.hashPassword(req.body.password),
+                            manager: req.body.manager,
+                            email: req.body.email,
+                            active: req.body.active
+                        }, {
+                            where: { idemp: req.body.idemp },
+                            defaults: {
+
+                                hireDate: req.body.hireDate,
+                                dob: req.body.dob,
+                                firstName: req.body.firstName,
+                                middleName: req.body.middleName,
+                                lastName: req.body.lastName,
+                                userId: req.body.userId,
+                                password: req.body.password,
+                                active: req.body.active,
+                                manager: req.body.manager,
+                                email: req.body.email,
+                                idcomp: req.body.idcomp,
+                                active: req.body.active
+                            }
+                        }).spread(function (result, created) {
+                            if (result) {
+                                res.send('User Successfully Created!');
+                                console.log('User Successfully Created!');
+                            } else {
+                                res.send('User Name Does Not Meet The Requirements!');
+                            }
+                        });
+                } else {
+                    res.send('You are not logged in or a manager!')
+                }
+            })
+
+        } else {
+            console.log('testing')
+        }
+    } else {
+        console.log('Access Denied!')
+        res.send('Access Denied')
+    }
 });
 
 //LOGOUT GET ROUTE
@@ -167,9 +259,25 @@ router.delete('/logout', function (req, res, next){
     
 
 
+
+router.post('/schedules', function (req, res, next) {
+    console.log('Getting Schedule')
+    models.schedules.findAll({
+        where: { idemp: req.body.idemp }
+
+    }).then(idschedules => {
+        res.json({
+            idschedules: idschedules
+        })
+    })
+});
+
+
 router.post('/schedule', function (req, res, next) {
 
     console.log('Creating or Find Work Schedules...')
+    console.log(req.body.idemp)
+    console.log(req.body.mon_start)
     models.schedules
         .findOrCreate({
             where: { idschedules: req.body.idschedules },
@@ -194,7 +302,7 @@ router.post('/schedule', function (req, res, next) {
         })
         .spread(function (result, created) {
             if (created) {
-                console.log('User Successfully Created!');
+                console.log('Schedule Successfully Created!');
             } else {
                 res.send('User Name Does Not Meet The Requirements!');
             }
@@ -241,7 +349,7 @@ router.post('/punch', function (req, res, next) {
                             models.time_punch
                                 .create({
                                     idemp: resp.idemp
-                                    
+
                                 }).then(response => {
                                     console.log(resp.idemp)
                                     res.json({
@@ -278,22 +386,47 @@ router.post('/punch', function (req, res, next) {
 
 })
 
-// Deactivate User Route
+router.post("/emps", function (req, res, next) {
+    console.log('Resetting Password');
+    console.log(req.body)
+    models.emp
+        .findOne({
+            where: { email: req.body.email },
+            defaults: {
+                password: req.body.password,
+                email: req.body.email
+            }
+        })
+    console.log('Found User')
+    console.log()
+    models.emp
+        .update({ password: authService.hashPassword(req.body.password) },
+            { where: { email: req.body.email } }, {
+            defaults: {
+                email: req.body.email,
+                password: authService.hashPassword(req.body.password)
+            }
+
+        }).then()
+    res.send('Password Reset!')
+});
+
 router.post("/:idemp", function (req, res, next) {
     let employeeId = parseInt(req.params.idemp);
     let active = req.body.active;
     console.log(employeeId)
     console.log(active)
     models.emp
-      .update({ active: req.body.active },{
-        where: { idemp: employeeId },
-        //defaults:{active:'0'}
-      })
-      .then(result => res.status(200).send('User deactivated!'))
-      .catch(err => {
-        res.status(400);
-        res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
-      }
-      );
-})
+        .update({ active: req.params.active }, {
+            where: { idemp: employeeId },
+            //defaults:{active:'0'}
+        })
+        .then(result => res.status(200).send('User deactivated!'))
+        .catch(err => {
+            res.status(400);
+            res.send("There was a problem disabling the employee. Please make sure you are specifying the correct employee ID.");
+        }
+        );
+});
+
 module.exports = router;
